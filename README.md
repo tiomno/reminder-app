@@ -1,5 +1,7 @@
 # reminder-app
 
+[![Build Status](https://travis-ci.org/tiomno/reminder-app.svg?branch=master)](https://travis-ci.org/tiomno/reminder-app)
+
 LR - Software Engineer Assignment 
 ========
 

@@ -9,7 +9,8 @@
     "polymer-cli": "^0.17.0"
   },
   "scripts": {
-    "lint": "eslint . --ext js,html --ignore-path .gitignore",
-    "test": "npm run lint && polymer test"
+    "lint": "./node_modules/.bin/eslint . --ext js,html --ignore-path .gitignore",
+    "test": "npm run lint && ./node_modules/.bin/polymer test",
+    "start": "./node_modules/.bin/polymer serve"
   }
 }
