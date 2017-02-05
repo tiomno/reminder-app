@@ -20,9 +20,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="my-icons.html">
+<link rel="import" href="reminder-icons.html">
 
-<dom-module id="my-app">
+<dom-module id="reminder-app">
   <template>
     <style>
       :host {
@@ -73,6 +73,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <a name="view1" href="/view1">View One</a>
           <a name="view2" href="/view2">View Two</a>
           <a name="view3" href="/view3">View Three</a>
+          <a name="reminders" href="/reminders">Reminders</a>
         </iron-selector>
       </app-drawer>
 
@@ -81,7 +82,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         <app-header condenses reveals effects="waterfall">
           <app-toolbar>
-            <paper-icon-button icon="my-icons:menu" drawer-toggle></paper-icon-button>
+            <paper-icon-button icon="reminder-icons:menu" drawer-toggle></paper-icon-button>
             <div main-title>Reminder App</div>
           </app-toolbar>
         </app-header>
@@ -91,10 +92,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             attr-for-selected="name"
             fallback-selection="view404"
             role="main">
-          <my-view1 name="view1"></my-view1>
-          <my-view2 name="view2"></my-view2>
-          <my-view3 name="view3"></my-view3>
-          <my-view404 name="view404"></my-view404>
+          <view-view1 name="view1"></view-view1>
+          <view-view2 name="view2"></view-view2>
+          <view-view3 name="view3"></view-view3>
+          <view-reminders name="reminders"></view-reminders>
+          <view-page404 name="page404"></view-page404>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -102,18 +104,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
     Polymer({
-      is: 'my-app',
+      is: 'reminder-app',
 
       properties: {
         page: {
           type: String,
           reflectToAttribute: true,
-          observer: '_pageChanged'
-        }
+          observer: '_pageChanged',
+        },
       },
 
       observers: [
-        '_routePageChanged(routeData.page)'
+        '_routePageChanged(routeData.page)',
       ],
 
       _routePageChanged: function(page) {
@@ -126,13 +128,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageChanged: function(page) {
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('my-' + page + '.html');
+        var resolvedPageUrl = this.resolveUrl('view-' + page + '.html');
         this.importHref(resolvedPageUrl, null, this._showPage404, true);
       },
 
       _showPage404: function() {
-        this.page = 'view404';
-      }
+        this.page = 'page404';
+      },
     });
   </script>
 </dom-module>
