@@ -1,0 +1,133 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-list/iron-list.html">
+
+<dom-module id="reminders-list">
+
+    <template>
+        <style>
+            :host {
+                display: block;
+                @apply(--paper-font-common-base);
+            }
+
+            iron-list {
+                padding-top: 64px;
+                --iron-list-items-container: {
+                    margin: auto;
+                    margin-bottom: 60px;
+                    border-bottom: 1px solid #ddd;
+                };
+            }
+
+            .item {
+                @apply(--layout-horizontal);
+                padding: 20px;
+                background-color: white;
+                border: 1px solid #ddd;
+                cursor: pointer;
+                margin-bottom: 10px;
+            }
+
+            .pad {
+                padding: 0 16px;
+                @apply(--layout-flex);
+                @apply(--layout-vertical);
+            }
+
+            .primary {
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+            .icon-check {
+                color: var(--google-green-500);
+            }
+
+            .icon-remove {
+                color: var(--google-red-500);
+            }
+
+            .due-date, .description {
+                font-size: 14px;
+            }
+
+            .description {
+                color: gray;
+                display: none;
+            }
+
+            .item:hover .due-date::after {
+                content: ' [+]';
+                color: gray;
+            }
+
+            .item.expanded:hover .due-date::after {
+                content: '';
+            }
+
+            .item.expanded .description {
+                display: block;
+            }
+
+            .item.expanded:hover .description::after {
+                content: ' [–]';
+            }
+
+            .spacer {
+                @apply(--layout-flex);
+            }
+        </style>
+
+        <iron-ajax url="data/reminders.json" last-response="{{items}}" auto></iron-ajax>
+
+        <iron-list id="list" items="[[items]]" as="item">
+            <template>
+                <div>
+                    <div class$="[[getClassForItem(item, selected)]]" tabindex$="[[tabIndex]]">
+                        <iron-icon class="icon-check" icon$="[[iconForItem(item)]]"></iron-icon>
+                        <div class="pad">
+                            <div class="primary">[[item.title]]</div>
+                            <div class="due-date">[[item.date]]</div>
+                            <div class="description">[[item.description]]</div>
+                        </div>
+                        <iron-icon class="icon-remove" icon="remove-circle"></iron-icon>
+                    </div>
+                </div>
+            </template>
+        </iron-list>
+    </template>
+
+    <script>
+        Polymer( {
+            is: 'reminders-list',
+
+            properties: {
+                items: {
+                    type: Array,
+                },
+            },
+
+            iconForItem: function( item ) {
+                return item
+                    ? ( item.done ? 'check-box' : 'check-box-outline-blank' )
+                    : '';
+            },
+
+            getClassForItem: function( item, selected ) {
+                return selected ? 'item expanded' : 'item';
+            },
+
+            addReminder: function( reminder ) {
+                this.push( 'items', reminder );
+            },
+
+            removeReminder: function( reminder ) {
+                var index = this.items.indexOf( reminder );
+                this.splice( 'items', index, 1 );
+            },
+        } );
+    </script>
+
+</dom-module>
