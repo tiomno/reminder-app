@@ -30,18 +30,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </test-fixture>
 
     <script>
-      suite('view-reminders tests', function() {
-        var home;
+        suite( 'view-reminders tests', function() {
+            var home;
 
-        setup(function() {
-          home = fixture('basic');
-        });
+            setup( function() {
+                home = fixture( 'basic' );
+            } );
 
-        test('Content in circle should be `Reminders List`', function() {
-          var circle = Polymer.dom(home.root).querySelector('.circle');
-          assert.equal(circle.textContent, 'Reminders List');
+            test( 'Content in round-bg should be `Reminders`', function() {
+                var title = Polymer.dom( home.root ).querySelector( '.round-bg' );
+                assert.equal( title.textContent, 'Reminders' );
+            } );
+
+            test( 'Content in h1 should be `Reminders List`', function() {
+                var subTitle = Polymer.dom( home.root ).querySelector( 'h1' );
+                assert.equal( subTitle.textContent, 'Reminders List' );
+            } );
         });
-      });
     </script>
   </body>
 </html>
