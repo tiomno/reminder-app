@@ -24,42 +24,6 @@ Reminder View
       <div class="round-bg">Reminders</div>
       <h1>Reminders List</h1>
       <reminders-list></reminders-list>
-
-
-      <form is="iron-form" method="get" action="/" id="presubmit">
-        <paper-input name="title" label="Title" value="" required></paper-input>
-        <paper-textarea label="Description"></paper-textarea>
-        <paper-input label="Due Date" type="date" placeholder="Due Date">
-            <iron-icon icon="calendar" prefix></iron-icon>
-        </paper-input>
-
-        <paper-button raised onclick="_submit(event)">Save</paper-button>
-        <paper-button raised onclick="_reset(event)">Reset</paper-button>
-        <div class="output"></div>
-      </form>
-      <script>
-          function _submit(event) {
-              Polymer.dom(event).localTarget.parentElement.submit();
-          }
-          function _reset(event) {
-              var form = Polymer.dom(event).localTarget.parentElement
-              form.reset();
-              form.querySelector('.output').innerHTML = '';
-          }
-          presubmit.addEventListener('iron-form-presubmit', function(event) {
-              this.request.params['sidekick'] = 'Robin';
-          });
-          presubmit.addEventListener('iron-form-submit', function(event) {
-              this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
-          }); /* //TODO &&& rm  */
-      </script>
-
-        <div class="output">
-
-            asdasd
-        </div><!-- //TODO &&& rm -->
-
-
     </div>
   </template>
 

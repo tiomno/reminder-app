@@ -1,7 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
-<link rel="import" href="icon-toggle.html">
 
 <dom-module id="reminders-item">
 
@@ -10,6 +9,7 @@
             :host {
                 @apply(--paper-font-common-base);
                 display: block;
+                position: relative !important;
             }
 
             .item {
@@ -67,15 +67,14 @@
             }
         </style>
 
-        <div class$="[[getClassForItem(selected)]]" tabindex$="[[tabIndex]]">
-            <paper-checkbox name="done" value="true" required checked="[[done]]"></paper-checkbox>
-
-            <div class="pad">
+        <div class$="[[expanded]]" tabindex$="[[tabIndex]]" hidden$="[[removed]]">
+            <paper-checkbox class="tick" value="true" checked$="{{done}}"></paper-checkbox>
+            <div class="pad" on-tap="_tapPad">
                 <div class="primary">[[title]]</div>
                 <div class="due-date">[[date]]</div>
                 <div class="description">[[description]]</div>
             </div>
-            <iron-icon class="icon-remove" icon="remove-circle"></iron-icon>
+            <iron-icon class="icon-remove" icon="remove-circle" on-tap="_tapRemove"></iron-icon>
         </div>
 
     </template>
@@ -85,21 +84,26 @@
             is: 'reminders-item',
 
             properties: {
-                title: String,
-                description: String,
-                date: String,
-                done: Boolean,
-                selected: {
+                expanded: {
+                    type: String,
+                    value: 'item',
+                },
+                removed: {
                     type: Boolean,
                     value: false,
-                    notify: true,
-                    reflectToAttribute: true,
                 },
-                tabIndex: Number,
             },
 
-            getClassForItem: function( selected ) {
-                return selected ? 'item expanded' : 'item';
+            _tapPad: function() {
+                if ( this.expanded === 'item' ) {
+                    this.expanded = 'expanded item';
+                } else {
+                    this.expanded = 'item';
+                }
+            },
+
+            _tapRemove: function() {
+                this.removed = true;
             },
         } );
     </script>

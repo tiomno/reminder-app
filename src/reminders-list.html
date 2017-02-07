@@ -3,7 +3,6 @@
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../bower_components/iron-list/iron-list.html">
 <link rel="import" href="reminders-item.html">
-<link rel="import" href="icon-toggle.html">
 
 <dom-module id="reminders-list">
 
@@ -17,18 +16,30 @@
             }
 
             iron-list {
+                background-color: #fafafa;
+                border: 1px solid #ddd;
                 flex: 1 1 auto;
-                padding-top: 30px;
+                margin-bottom: 30px;
+                padding: 1px;
             }
         </style>
 
         <iron-ajax url="data/reminders.json" last-response="{{items}}" auto></iron-ajax>
 
-        <iron-list id="list" items="[[items]]" as="item" selection-enabled multi-selection>
+        <iron-list id="list" items="[[items]]" as="item">
             <template>
-                <reminders-item title="[[item.title]]" date="[[item.date]]" description="[[item.description]]" done="[[item.done]]" selected="[[selected]]" tabindex="[[tabIndex]]"></reminders-item>
+                <reminders-item title="[[item.title]]" date="[[item.date]]" description="[[item.description]]" done="[[item.done]]" tabindex="[[tabIndex]]"></reminders-item>
             </template>
         </iron-list>
+
+        <form is="iron-form" method="get" action="/">
+            <paper-input name="title" label="Title" value="{{item.title}}" required></paper-input>
+            <paper-textarea label="Description" value="{{item.description}}"></paper-textarea>
+            <paper-input label="Due Date" type="date" value="{{item.date}}" placeholder="Due Date"></paper-input>
+
+            <paper-button raised on-tap="_addReminder">Add Reminder</paper-button>
+            <paper-button raised on-tap="_cleanReminder">Clean Reminder</paper-button>
+        </form>
     </template>
 
     <script>
@@ -38,17 +49,35 @@
             properties: {
                 items: {
                     type: Array,
+                    value: [],
+                },
+                item: {
+                    type: Object,
+                    value: {},
+                    observer: '_itemChanged',
                 },
             },
 
-            addReminder: function( reminder ) {
-                this.push( 'items', reminder );
+            _addReminder: function() {
+                if ( typeof this.item.title !== 'undefined' && this.item.title ) {
+                    this.push( 'items', this.item );
+                    this.item = {};
+                }
             },
 
-            removeReminder: function( reminder ) {
+            _cleanReminder: function() {
+                this.item = {};
+            },
+
+            _removeReminder: function( reminder ) {
                 var index = this.items.indexOf( reminder );
                 this.splice( 'items', index, 1 );
             },
+
+            _itemChanged: function() {
+                // TODO &&& do something here
+            },
+
         } );
     </script>
 

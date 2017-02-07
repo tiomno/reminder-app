@@ -103,7 +103,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
-    Polymer({
+    Polymer( {
       is: 'reminder-app',
 
       properties: {
@@ -118,23 +118,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         '_routePageChanged(routeData.page)',
       ],
 
-      _routePageChanged: function(page) {
+      _routePageChanged: function( page ) {
         this.page = page || 'reminders';
 
-        if (!this.$.drawer.persistent) {
+        if ( ! this.$.drawer.persistent ) {
           this.$.drawer.close();
         }
       },
 
-      _pageChanged: function(page) {
+      _pageChanged: function( page ) {
         // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl('view-' + page + '.html');
-        this.importHref(resolvedPageUrl, null, this._showPage404, true);
+        var resolvedPageUrl = this.resolveUrl( 'view-' + page + '.html' );
+        this.importHref( resolvedPageUrl, null, this._showPage404, true );
       },
 
       _showPage404: function() {
         this.page = 'page404';
       },
-    });
+    } );
   </script>
 </dom-module>

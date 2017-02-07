@@ -1,5 +1,5 @@
 <!--
-Test suite for view-reminders element
+Test suite for reminder-app element
 -->
 
 <!doctype html>
@@ -8,37 +8,39 @@ Test suite for view-reminders element
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 
-    <title>view-reminders</title>
+    <title>reminder-app</title>
 
     <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="../bower_components/web-component-tester/browser.js"></script>
 
     <!-- Import the element to test -->
-    <link rel="import" href="../src/view-reminders.html">
+    <link rel="import" href="../src/reminder-app.html">
   </head>
   <body>
     <test-fixture id="basic">
       <template>
-        <view-reminders></view-reminders>
+        <reminder-app></reminder-app>
       </template>
     </test-fixture>
 
     <script>
-        suite( 'view-reminders tests', function() {
+        suite( 'reminder-app tests', function() {
             var home;
 
             setup( function() {
                 home = fixture( 'basic' );
             } );
 
-            test( 'Content in round-bg should be `Reminders`', function() {
-                var title = Polymer.dom( home.root ).querySelector( '.round-bg' );
-                assert.equal( title.textContent, 'Reminders' );
+            test( 'Property page should be able to set', function() {
+                home.setAttribute( 'page', 'reminders' );
+
+                assert.equal( 'reminders', home.page );
             } );
 
-            test( 'Content in h1 should be `Reminders List`', function() {
-                var subTitle = Polymer.dom( home.root ).querySelector( 'h1' );
-                assert.equal( subTitle.textContent, 'Reminders List' );
+            test( 'Content should have 4 anchor elements', function() {
+                var links = Polymer.dom( home.root ).querySelectorAll( 'a' );
+
+                assert.equal( 4, links.length );
             } );
         });
     </script>
