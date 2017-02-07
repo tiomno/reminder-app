@@ -1,0 +1,53 @@
+<!--
+Test suite for reminders-item element
+-->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>reminders-item</title>
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../bower_components/web-component-tester/browser.js"></script>
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../src/reminders-item.html">
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template>
+        <reminders-item></reminders-item>
+      </template>
+    </test-fixture>
+
+    <script>
+        suite( 'reminders-item tests', function() {
+            var home;
+
+            setup( function() {
+                home = fixture( 'basic' );
+            } );
+
+            test( 'Properties should be initialised', function() {
+                assert.isString( home.expanded );
+                assert.equal( 'item' );
+
+                assert.isFalse( home.removed );
+            } );
+
+            test( 'Property expanded changes when the item is tapped', function() {
+                home._tapPad();
+                assert.equal( 'expanded item', home.expanded );
+            } );
+
+            test( 'Property removed = true if the remove icon is tapped', function() {
+                home._tapRemove();
+                assert.isTrue( home.removed );
+            } );
+        });
+    </script>
+  </body>
+</html>

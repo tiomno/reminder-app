@@ -1,0 +1,111 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+
+<dom-module id="reminders-item">
+
+    <template>
+        <style>
+            :host {
+                @apply(--paper-font-common-base);
+                display: block;
+                position: relative !important;
+            }
+
+            .item {
+                @apply(--layout-horizontal);
+                background-color: white;
+                border: 1px solid #ddd;
+                cursor: pointer;
+                margin-bottom: 10px;
+                padding: 20px;
+            }
+
+            .pad {
+                @apply(--layout-flex);
+                @apply(--layout-vertical);
+                padding: 0 16px;
+            }
+
+            .primary {
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+            .icon-check {
+                color: var(--google-green-500);
+            }
+
+            .icon-remove {
+                color: var(--google-red-500);
+            }
+
+            .due-date, .description {
+                font-size: 14px;
+            }
+
+            .description {
+                color: gray;
+                display: none;
+            }
+
+            .item:hover .due-date::after {
+                content: ' [+]';
+                color: gray;
+            }
+
+            .item.expanded:hover .due-date::after {
+                content: '';
+            }
+
+            .item.expanded .description {
+                display: block;
+            }
+
+            .item.expanded:hover .description::after {
+                content: ' [–]';
+            }
+        </style>
+
+        <div class$="[[expanded]]" tabindex$="[[tabIndex]]" hidden$="[[removed]]">
+            <paper-checkbox class="tick" value="true" checked$="{{done}}"></paper-checkbox>
+            <div class="pad" on-tap="_tapPad">
+                <div class="primary">[[title]]</div>
+                <div class="due-date">[[date]]</div>
+                <div class="description">[[description]]</div>
+            </div>
+            <iron-icon class="icon-remove" icon="remove-circle" on-tap="_tapRemove"></iron-icon>
+        </div>
+
+    </template>
+
+    <script>
+        Polymer( {
+            is: 'reminders-item',
+
+            properties: {
+                expanded: {
+                    type: String,
+                    value: 'item',
+                },
+                removed: {
+                    type: Boolean,
+                    value: false,
+                },
+            },
+
+            _tapPad: function() {
+                if ( this.expanded === 'item' ) {
+                    this.expanded = 'expanded item';
+                } else {
+                    this.expanded = 'item';
+                }
+            },
+
+            _tapRemove: function() {
+                this.removed = true;
+            },
+        } );
+    </script>
+
+</dom-module>

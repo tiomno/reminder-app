@@ -3,6 +3,11 @@ Reminder View
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="reminders-list.html">
 <link rel="import" href="shared-styles.html">
 
 <dom-module id="view-reminders">
@@ -16,10 +21,9 @@ Reminder View
     </style>
 
     <div class="card">
-      <div class="circle">Reminders List</div>
-      <h1>View Reminder List</h1>
-      <p>Modus commodo minimum eum te, vero utinam assueverit per eu.</p>
-      <p>Ea duis bonorum nec, falli paulo aliquid ei eum.Has at minim mucius aliquam, est id tempor laoreet.Pro saepe pertinax ei, ad pri animal labores suscipiantur.</p>
+      <div class="round-bg">Reminders</div>
+      <h1>Reminders List</h1>
+      <reminders-list></reminders-list>
     </div>
   </template>
 
