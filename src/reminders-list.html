@@ -10,35 +10,129 @@
         <style>
             :host {
                 @apply(--paper-font-common-base);
-                display: flex;
-                flex-direction: column;
-                height: 100vh;
             }
 
-            iron-list {
+            .item {
+                @apply(--layout-horizontal);
+                background-color: white;
+                border: 1px solid #ddd;
+                cursor: pointer;
+                margin-bottom: 10px;
+                padding: 20px;
+            }
+
+            .pad {
+                @apply(--layout-flex);
+                @apply(--layout-vertical);
+                padding: 0 16px;
+            }
+
+            .title {
+                font-size: 16px;
+                font-weight: bold;
+            }
+
+            .icon-remove {
+                color: var(--google-red-500);
+            }
+
+            .due-date, .description {
+                font-size: 14px;
+                font-weight: normal;
+            }
+
+            .description {
+                color: gray;
+                display: none;
+            }
+
+            .item:hover {
+                background-color: #fafaff;
+            }
+
+            .pad:hover .due-date::after {
+                content: ' [+]';
+                color: gray;
+            }
+
+            .pad.expanded:hover .due-date::after {
+                content: ' [-]';
+            }
+
+            .item .pad.expanded .description {
+                display: block;
+            }
+
+            .item .pad.expanded:hover .description::after {
+                content: ' [–]';
+            }
+
+            /*iron-list {
                 background-color: #fafafa;
                 border: 1px solid #ddd;
-                flex: 1 1 auto;
+                !*flex: 1 1 auto;*!
                 margin-bottom: 30px;
                 padding: 1px;
+
+                --iron-list-items-container: {
+                    background-color: red;
+                };
+            }*/
+
+            .col-half {
+                float: left;
+                width: 50%;
+            }
+
+            .full-width {
+                clear: both;
+                width: 100%;
+            }
+
+            .buttons-grp {
+                margin: 50px 0 30px 25px;
+            }
+
+            paper-input,
+            paper-textarea {
+                margin: 30px;
             }
         </style>
 
         <iron-ajax url="data/reminders.json" last-response="{{items}}" auto></iron-ajax>
 
-        <iron-list id="list" items="[[items]]" as="item">
-            <template>
-                <reminders-item title="[[item.title]]" date="[[item.date]]" description="[[item.description]]" done="[[item.done]]" tabindex="[[tabIndex]]"></reminders-item>
-            </template>
-        </iron-list>
+        <!-- I tried to create an iron-list with a custome element per item, but couldn't see how to get changes upward from target to host for delete event -->
+        <!--<iron-list id="list" items="[[items]]" as="item">-->
+            <!--<template>-->
+                <!--<reminders-item title="[[item.title]]" date="[[item.date]]" description="[[item.description]]" done="[[item.done]]" tabindex="[[tabIndex]]"></reminders-item>-->
+            <!--</template>-->
+        <!--</iron-list>-->
+
+        <template is="dom-repeat" items="{{items}}">
+            <div class="item">
+                <paper-checkbox class="tick" value="true" checked$="{{item.done}}"></paper-checkbox>
+                <div class="pad" on-tap="_tapPad">
+                    <div class="title">[[item.title]] :: <span class="due-date">[[item.date]]</span></div>
+                    <div class="description">[[item.description]]</div>
+                </div>
+                <iron-icon class="icon-remove" icon="remove-circle" on-tap="_removeReminder"></iron-icon>
+            </div>
+        </template>
 
         <form is="iron-form" method="get" action="/">
-            <paper-input name="title" label="Title" value="{{item.title}}" required></paper-input>
-            <paper-textarea label="Description" value="{{item.description}}"></paper-textarea>
-            <paper-input label="Due Date" type="date" value="{{item.date}}" placeholder="Due Date"></paper-input>
-
-            <paper-button raised on-tap="_addReminder">Add Reminder</paper-button>
-            <paper-button raised on-tap="_cleanReminder">Clean Reminder</paper-button>
+            <div class="col-half">
+                <paper-input name="title" label="Title" value="{{item.title}}" required></paper-input>
+            </div>
+            <div class="col-half">
+                <paper-input label="Due Date" type="date" value="{{item.date}}" placeholder="Due Date"></paper-input>
+            </div>
+            <div class="full-width">
+                <paper-textarea label="Description" value="{{item.description}}"></paper-textarea>
+            </div>
+            <div class="buttons-grp full-width">
+                <paper-button raised on-tap="_addReminder">Add Reminder</paper-button>
+                <paper-button raised on-tap="_cleanReminder">Clean Reminder</paper-button>
+            </div>
         </form>
     </template>
 
@@ -54,7 +148,6 @@
                 item: {
                     type: Object,
                     value: {},
-                    observer: '_itemChanged',
                 },
             },
 
@@ -69,15 +162,43 @@
                 this.item = {};
             },
 
-            _removeReminder: function( reminder ) {
-                var index = this.items.indexOf( reminder );
-                this.splice( 'items', index, 1 );
+            _tapPad: function( e ) {
+                /**
+                 *  This vanilla solution in this method is because
+                 *  I didn't find the way to change the class via data binding
+                 *
+                 *  The following didn't work
+                 *
+                 *  <div class$="[[item.expanded]]">
+                 *
+                 *  e.model.item.expanded = "expanded item";
+                 *
+                 *
+                 */
+
+                var target = e.target;
+                var itemDiv;
+
+                if ( target.className === 'due-date' ) {
+                    itemDiv = target.parentNode.parentNode;
+                } else if ( target.className === 'title'
+                        || target.className === 'description' ) {
+                    itemDiv = target.parentNode;
+                } else {
+                    itemDiv = target;
+                }
+
+                if ( itemDiv.className === 'pad' ) {
+                    itemDiv.className = 'expanded pad';
+                } else {
+                    itemDiv.className = 'pad';
+                }
             },
 
-            _itemChanged: function() {
-                // TODO &&& do something here
+            _removeReminder: function( e ) {
+                var idx = this.items.indexOf(e.model.item);
+                this.splice( 'items', idx, 1 );
             },
-
         } );
     </script>
 
