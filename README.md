@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/tiomno/reminder-app.svg?branch=master)](https://travis-ci.org/tiomno/reminder-app)
 
-Demo: [![https://reminder-app-bbbe8.firebaseapp.com](https://reminder-app-bbbe8.firebaseapp.com)](https://reminder-app-bbbe8.firebaseapp.com)
+Demo: https://reminder-app-bbbe8.firebaseapp.com
 
 LR - Software Engineer Assignment 
 ========
