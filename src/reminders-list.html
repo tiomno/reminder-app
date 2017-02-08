@@ -10,74 +10,17 @@
         <style>
             :host {
                 @apply(--paper-font-common-base);
-            }
-
-            .item {
-                @apply(--layout-horizontal);
-                background-color: white;
-                border: 1px solid #ddd;
-                cursor: pointer;
-                margin-bottom: 10px;
-                padding: 20px;
-            }
-
-            .pad {
-                @apply(--layout-flex);
-                @apply(--layout-vertical);
-                padding: 0 16px;
-            }
-
-            .title {
-                font-size: 16px;
-                font-weight: bold;
-            }
-
-            .icon-remove {
-                color: var(--google-red-500);
-            }
-
-            .due-date, .description {
-                font-size: 14px;
-                font-weight: normal;
-            }
-
-            .description {
-                color: gray;
-                display: none;
-            }
-
-            .item:hover {
-                background-color: #fafaff;
-            }
-
-            .pad:hover .due-date::after {
-                content: ' [+]';
-                color: gray;
-            }
-
-            .pad.expanded:hover .due-date::after {
-                content: ' [-]';
-            }
-
-            .item .pad.expanded .description {
                 display: block;
+                height: 100vh;
             }
 
-            .item .pad.expanded:hover .description::after {
-                content: ' [–]';
-            }
-
-            /*iron-list {
-                background-color: #fafafa;
-                border: 1px solid #ddd;
-                !*flex: 1 1 auto;*!
-                margin-bottom: 30px;
-                padding: 1px;
-
+            iron-list {
                 --iron-list-items-container: {
-                    background-color: red;
+                    margin-top: 60px;
+                    margin-bottom: 60px;
+                    border-bottom: 1px solid #ddd;
                 };
-            }*/
+            }
 
             .col-half {
                 float: left;
@@ -101,21 +44,11 @@
 
         <iron-ajax url="data/reminders.json" last-response="{{items}}" auto></iron-ajax>
 
-        <!-- I tried to create an iron-list with a custome element per item, but couldn't see how to get changes upward from target to host for delete event -->
-        <!--<iron-list id="list" items="[[items]]" as="item">-->
-                <!--<reminders-item title="[[item.title]]" date="[[item.date]]" description="[[item.description]]" done="[[item.done]]" tabindex="[[tabIndex]]"></reminders-item>-->
-    <!--</iron-list>-->
-
-        <template is="dom-repeat" items="{{items}}">
-            <div class="item">
-                <paper-checkbox class="tick" value="true" checked$="{{item.done}}"></paper-checkbox>
-                <div class="pad" on-tap="_tapPad">
-                    <div class="title">[[item.title]] :: <span class="due-date">[[item.date]]</span></div>
-                    <div class="description">[[item.description]]</div>
-                </div>
-                <iron-icon class="icon-remove" icon="remove-circle" on-tap="_removeReminder"></iron-icon>
-            </div>
-        </template>
+        <iron-list id="list" items="[[items]]" as="item">
+            <template>
+                <reminders-item title="[[item.title]]" date="[[item.date]]" description="[[item.description]]" done="{{item.done}}" hash="{{item.hash}}"></reminders-item>
+            </template>
+        </iron-list>
 
         <form is="iron-form" method="get" action="/">
             <div class="col-half">
@@ -149,8 +82,37 @@
                 },
             },
 
+            ready: function() {
+                this.addEventListener( 'removeReminder', function( e ) {
+                    var itemIndex = this.items.findIndex( function( item ) {
+                        return item.hash === e.detail.hash;
+                    } );
+
+                    this.splice( 'items', itemIndex, 1 );
+                    this.$.list.notifyResize();
+                } );
+            },
+
+            _uniqHash: function() {
+                var text = '';
+                var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                    + 'abcdefghijklmnopqrstuvwxyz'
+                    + '0123456789';
+
+                for( var i=0; i < 5; i++ ) {
+                    text += possible.charAt(
+                        Math.floor( Math.random() * possible.length )
+                    );
+                }
+
+                return text;
+            },
+
             _addReminder: function() {
                 if ( typeof this.item.title !== 'undefined' && this.item.title ) {
+                    // create hash to identify the reminder
+                    this.hash = this._uniqHash();
+
                     this.push( 'items', this.item );
                     this.item = {};
                 }
@@ -158,44 +120,6 @@
 
             _cleanReminder: function() {
                 this.item = {};
-            },
-
-            _tapPad: function( e ) {
-                /**
-                 *  This vanilla solution in this method is because
-                 *  I didn't find the way to change the class via data binding
-                 *
-                 *  The following didn't work
-                 *
-                 *  <div class$="[[item.expanded]]">
-                 *
-                 *  e.model.item.expanded = "expanded item";
-                 *
-                 *
-                 */
-
-                var target = e.target;
-                var itemDiv;
-
-                if ( target.className === 'due-date' ) {
-                    itemDiv = target.parentNode.parentNode;
-                } else if ( target.className === 'title'
-                        || target.className === 'description' ) {
-                    itemDiv = target.parentNode;
-                } else {
-                    itemDiv = target;
-                }
-
-                if ( itemDiv.className === 'pad' ) {
-                    itemDiv.className = 'expanded pad';
-                } else {
-                    itemDiv.className = 'pad';
-                }
-            },
-
-            _removeReminder: function( e ) {
-                var idx = this.items.indexOf(e.model.item);
-                this.splice( 'items', idx, 1 );
             },
         } );
     </script>

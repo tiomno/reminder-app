@@ -69,7 +69,7 @@
             }
         </style>
 
-        <div class$="[[expanded]]" tabindex$="[[tabIndex]]">
+        <div class$="[[expanded]]">
             <paper-checkbox class="tick" value="true" checked$="{{done}}"></paper-checkbox>
             <div class="pad" on-tap="_tapPad">
                 <div class="title">[[title]] :: <span class="due-date">[[date]]</span></div>
@@ -84,14 +84,14 @@
         Polymer( {
             is: 'reminders-item',
 
+            behaviors: [
+                Polymer.IronResizableBehavior,
+            ],
+
             properties: {
                 expanded: {
                     type: String,
                     value: 'item',
-                },
-                removed: {
-                    type: Boolean,
-                    value: false,
                 },
             },
 
@@ -104,7 +104,7 @@
             },
 
             _tapRemove: function() {
-                this.removed = true;
+                this.fire( 'removeReminder', {hash: this.hash} );
             },
         } );
     </script>
