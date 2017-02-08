@@ -103,8 +103,10 @@
 
         <!-- I tried to create an iron-list with a custome element per item, but couldn't see how to get changes upward from target to host for delete event -->
         <!--<iron-list id="list" items="[[items]]" as="item">-->
+            <!--<template>-->
                 <!--<reminders-item title="[[item.title]]" date="[[item.date]]" description="[[item.description]]" done="[[item.done]]" tabindex="[[tabIndex]]"></reminders-item>-->
-    <!--</iron-list>-->
+            <!--</template>-->
+        <!--</iron-list>-->
 
         <template is="dom-repeat" items="{{items}}">
             <div class="item">

@@ -36,8 +36,8 @@ Test suite for reminders-list element
                 assert.isObject( home.item );
             } );
 
-            test( 'There is an iron-list element', function() {
-                assert.isNotNull( home.$$( 'iron-list' ) );
+            test( 'There is a nested template element', function() {
+                assert.isNotNull( home.$$( 'template' ) );
             } );
 
             test( 'There is a form element', function() {
